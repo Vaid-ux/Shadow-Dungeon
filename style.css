@@ -1,383 +1,54 @@
+/* ================================================================
+   SHADOW DUNGEON — ESTILOS
+   O jogo é desenhado inteiramente em canvas; o CSS cuida apenas
+   da tela cheia, do cursor e da tipografia de fallback.
+   ================================================================ */
+
+:root {
+    --bg: #07060c;
+    --gold: #e8c46a;
+    --text: #e9e3d6;
+    color-scheme: dark;
+}
+
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    overflow: hidden;
-    user-select: none;
 }
 
-body, html {
+html,
+body {
     width: 100%;
     height: 100%;
-    background-color: #0f0e17;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     overflow: hidden;
+    background: var(--bg);
 }
 
-canvas {
+body {
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    color: var(--text);
+    user-select: none;
+    -webkit-user-select: none;
+    overscroll-behavior: none;
+    touch-action: none;
+}
+
+#gameCanvas {
     display: block;
+    position: fixed;
+    inset: 0;
     width: 100vw;
     height: 100vh;
+    background:
+        radial-gradient(circle at 30% 20%, rgba(90, 61, 143, 0.18), transparent 55%),
+        radial-gradient(circle at 75% 80%, rgba(46, 93, 120, 0.12), transparent 60%),
+        #07060c;
+    cursor: crosshair;
+    outline: none;
 }
 
-/* Menu principal */
-.main-menu {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: #e0e0e0;
-    transition: all 0.3s ease;
-}
-
-.main-menu h1 {
-    font-size: 4em;
-    background: linear-gradient(135deg, #e94560 0%, #d1c4e9 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    margin-bottom: 30px;
-}
-
-.main-menu p {
-    font-size: 1.2em;
-    margin-bottom: 40px;
-    color: #b0bec5;
-}
-
-.menu-btn {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    border: none;
-    color: white;
-    padding: 15px 40px;
-    font-size: 1.2em;
-    font-weight: bold;
-    border-radius: 30px;
-    cursor: pointer;
-    margin: 10px;
-    transition: transform 0.2s, box-shadow 0.2s;
-    width: 280px;
-}
-
-.menu-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-}
-
-.menu-btn:active {
-    transform: translateY(0);
-}
-
-.shop-btn {
-    background: linear-gradient(135deg, #a855f7 0%, #e0f7fa 100%);
-    color: #1a237e;
-}
-
-.shop-btn:hover {
-    box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);
-}
-
-/* HUD */
-.hud {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 20px;
-    color: white;
-    pointer-events: none;
-}
-
-.hud .health-bar {
-    width: 200px;
-    height: 20px;
-    background: rgba(0,0,0,0.5);
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 10px;
-}
-
-.hud .health-fill {
-    height: 100%;
-    width: 100%;
-    background: linear-gradient(90deg, #e74c3c, #ff6b6b);
-    transition: width 0.1s;
-}
-
-.hud .mana-bar {
-    width: 200px;
-    height: 12px;
-    background: rgba(0,0,0,0.5);
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 10px;
-    margin-top: 5px;
-}
-
-.hud .mana-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #3498db, #8e44ad);
-    transition: width 0.1s;
-}
-
-.hud .xp-bar {
-    width: 300px;
-    height: 10px;
-    background: rgba(0,0,0,0.5);
-    border-radius: 8px;
-    overflow: hidden;
-    margin: 10px 0;
-}
-
-.hud .xp-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #f1c40f, #f39c12);
-    transition: width 0.1s;
-}
-
-.hud .stats {
-    display: flex;
-    justify-content: space-between;
-    margin: 15px 0;
-}
-
-.stat {
-    flex: 1;
-    text-align: center;
-    margin: 0 5px;
-    background: rgba(255,255,255,0.1);
-    padding: 8px;
-    border-radius: 6px;
-    min-width: 80px;
-}
-
-.stat .value {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #f1c40f;
-}
-
-.stat .label {
-    font-size: 0.7em;
-    color: #b0bec5;
-    text-transform: uppercase;
-}
-
-/* Combo */
-.combo-indicator {
-    position: absolute;
-    top: 100px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(231, 76, 60, 0.9);
-    color: white;
-    padding: 8px 20px;
-    border-radius: 20px;
-    font-size: 1.2em;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
-}
-
-.combo-indicator.visible {
-    opacity: 1;
-    animation: comboPulse 1s ease;
-}
-
-@keyframes comboPulse {
-    0% { transform: translateX(-50%) scale(1); opacity: 1; }
-    100% { transform: translateX(-50%) scale(1.2); opacity: 0; }
-}
-
-/* Pause menu */
-.pause-menu {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(15, 15, 25, 0.9);
-    padding: 30px;
-    border-radius: 10px;
-    text-align: center;
-    color: white;
-    min-width: 200px;
-}
-
-.pause-menu h2 {
-    margin-bottom: 20px;
-    font-size: 2em;
-    background: linear-gradient(135deg, #e94560 0%, #d1c4e9 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.btn-continue, .btn-main-menu {
-    background: #4facfe;
-    color: white;
-    border: none;
-    padding: 10px 25px;
-    margin: 10px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 1em;
-    transition: transform 0.2s;
-}
-
-.btn-continue:hover, .btn-main-menu:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
-}
-
-/* Game Over */
-.game-over {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-}
-
-.game-over h1 {
-    font-size: 4em;
-    background: linear-gradient(135deg, #e74c3c 0%, #ff6b6b 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 20px;
-}
-
-.final-stats {
-    background: rgba(255,255,255,0.1);
-    padding: 20px;
-    border-radius: 10px;
-    margin: 20px 0;
-    min-width: 300px;
-}
-
-.final-stats div {
-    margin: 10px 0;
-    font-size: 1.2em;
-}
-
-.new-coins {
-    background: #f1c40f;
-    color: #1a1a1a;
-    padding: 10px 20px;
-    border-radius: 20px;
-    margin-top: 20px;
-    font-weight: bold;
-}
-
-/* Shop/Level Up */
-.overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.shop-panel, .levelup-panel {
-    background: #1a1a2e;
-    padding: 30px;
-    border-radius: 15px;
-    width: 90%;
-    max-width: 500px;
-    color: white;
-    animation: panelEnter 0.3s ease;
-}
-
-@keyframes panelEnter {
-    from { opacity: 0; transform: scale(0.8); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-.shop-panel h2, .levelup-panel h2 {
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #4facfe;
-    color: #f1c40f;
-}
-
-.upgrade-card {
-    background: rgba(255,255,255,0.05);
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: transform 0.2s;
-}
-
-.upgrade-card:hover {
-    transform: translateY(-3px);
-    background: rgba(255,255,255,0.1);
-}
-
-.upgrade-card h3 {
-    margin-bottom: 10px;
-    color: #f1c40f;
-}
-
-.upgrade-card p {
-    font-size: 0.8em;
-    color: #b0bec5;
-    margin-bottom: 15px;
-}
-
-.upgrade-card .cost {
-    color: #4facfe;
-    font-weight: bold;
-    font-size: 0.9em;
-}
-
-.shop-panel .back-btn {
-    width: 100%;
-    margin-top: 20px;
-}
-
-/* Event banner */
-.event-banner {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.7);
-    padding: 10px 30px;
-    border-radius: 25px;
-    color: #f1c40f;
-    font-size: 1.1em;
-    font-weight: bold;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    animation: bannerSlide 0.5s ease;
-}
-
-@keyframes bannerSlide {
-    from { top: 0; opacity: 0; }
-    to { top: 20px; opacity: 1; }
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-    .hud .stats {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .stat {
-        margin: 5px 0;
-    }
+::selection {
+    background: rgba(232, 196, 106, 0.35);
+    color: #fff;
 }
